@@ -22,6 +22,7 @@ import { useFormInput } from '../hooks/useInput';
 export function Register() {
   let navigate = useNavigate();
   const [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
+    data: undefined,
     availableEntities: [] as NationalityDTO[],
     loading: true,
     error: undefined
@@ -31,13 +32,13 @@ export function Register() {
     try {
       const nationalities = await formService.takeNationalities();
 
-      setComponentState({ availableEntities: nationalities, loading: false, error: undefined });
+      setComponentState({ availableEntities: nationalities, loading: false, error: undefined, data: undefined });
     } catch (exception) {
-      setComponentState({ availableEntities: [], loading: false, error: exception });
+      setComponentState({ availableEntities: [], loading: false, error: exception, data: undefined });
     }
   }
 
-  useEffect(() => { getNationalities(); }, [])
+  useEffect(() => { getNationalities() }, [])
 
   const {
     input,
@@ -61,6 +62,7 @@ export function Register() {
   }
 
   const submitUser = async () => {
+    //TODO update component state
     await userService.createUser({
       name: input.name,
       email: input.email,

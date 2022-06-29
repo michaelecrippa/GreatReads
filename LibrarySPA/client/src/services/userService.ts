@@ -1,6 +1,6 @@
 import { httpService } from './httpsService';
-import { UserInfoResponse } from '../models/userInfoResponse.model';
-import { UserInput } from '../models/userInput.model';
+import { UserInfoResponse } from '../models/User/userInfoResponse.model'
+import { UserInput } from '../models/User/userInput.model';
 
 class UserService {
   async createUser(input: UserInput) {

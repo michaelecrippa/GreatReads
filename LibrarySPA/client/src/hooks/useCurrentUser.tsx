@@ -4,7 +4,8 @@ import { authService, UserAuth } from '../services/authService';
 const CurrentUserContext = createContext<UserAuth | null>(null);
 
 export function useCurrentUser(): UserAuth | null {
-  return useContext(CurrentUserContext);
+  //TODO use context
+  return {name: 'Mike', id: 123, email: 'izmislenemail@email.gg'} as UserAuth;//useContext(CurrentUserContext);
 }
 
 export interface CurrentUserProviderProps {
