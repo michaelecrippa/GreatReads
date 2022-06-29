@@ -11,9 +11,7 @@ import {
 } from '@mui/material';
 
 import { FormEvent, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
-import { createBrowserHistory } from 'history';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import ForwardIcon from '@mui/icons-material/Forward';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
@@ -21,8 +19,7 @@ import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import { authService } from '../services/authService';
 
 export function Login() {
-  let history = createBrowserHistory();
-
+  let navigate = useNavigate();
   //TODO merge into a single state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +31,7 @@ export function Login() {
     if (username && password) {
       try {
         await authService.login({ username, password });
-        history.push(history.location.pathname || '/');
+        navigate('/');
       } catch (error: any) {
         setLogginError(error?.message);
       }

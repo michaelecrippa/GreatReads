@@ -1,4 +1,5 @@
 import { FormEvent, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -8,8 +9,6 @@ import {
   Typography,
   MenuItem
 } from '@mui/material';
-
-import { createBrowserHistory } from 'history';
 
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
@@ -21,7 +20,7 @@ import { ComponentState } from '../models/Components/componentState.interface';
 import { useFormInput } from '../hooks/useInput';
 
 export function Register() {
-  let history = createBrowserHistory();
+  let navigate = useNavigate();
   const [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
     availableEntities: [] as NationalityDTO[],
     loading: true,
@@ -75,8 +74,7 @@ export function Register() {
       username: input.name,
       password: input.password
     });
-
-    history.push('/');
+    navigate('/');
   }
 
   const globalError = globalErrorMessage(componentState.error);

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 
 import {
@@ -23,7 +22,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { authService } from '../services/authService';
 
 export function AppHeader() {
-  let history = createBrowserHistory();
+  let location = useLocation();
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const user = useCurrentUser();
@@ -80,8 +79,10 @@ export function AppHeader() {
             </Menu>
           </>
         )}
-        {!user && history.location.pathname !== '/login' && (
-          <Button color="inherit" component={RouterLink} to="/login">Login</Button>
+        {!user && location.pathname !== '/login' && (
+          <Button color="inherit" component={RouterLink} to="/login">
+            Login
+          </Button>
         )}
       </Toolbar>
     </AppBar>
