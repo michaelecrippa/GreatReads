@@ -3,7 +3,6 @@ import {
   Card, 
   Avatar, 
   CardHeader, 
-  CardMedia, 
   CardContent, 
   Typography 
 } from "@mui/material"
@@ -21,7 +20,6 @@ export function UserProfileInfo({ user } : any) {
             subheader={user.email}
           />
         </Box>
-        <CardMedia/>
         <CardContent>
           <Typography aria-label="nationality">
             Nationality: {user.nationality || 'unknown'}

@@ -1,13 +1,35 @@
-import { Model, ModelObject } from 'objection';
-import { User } from '@interfaces/users.interface';
+import { User } from '@/interfaces/users.interface';
+import { Model } from 'objection';
+import { BaseModel } from './base.model';
 
-export class Users extends Model implements User {
+export class UserModel extends BaseModel implements User {
+  static tableName = 'users';
+
+  static relationMappings = {
+    like: {
+      relation: Model.HasManyRelation,
+      join: {
+        from: 'users.id',
+        to: 'likes.userId',
+      },
+      modelClass: 'like',
+    },
+    comment: {
+      relation: Model.HasManyRelation,
+      join: {
+        from: 'users.id',
+        to: 'comments.userId',
+      },
+      modelClass: 'comment',
+    },
+  };
+
   id!: number;
+  name!: string;
   email!: string;
   password!: string;
-
-  static tableName = 'users'; // database table name
-  static idColumn = 'id'; // id column name
+  nationality!: string | null;
+  sex!: string | null;
+  age!: number | null;
+  token!: string | null;
 }
-
-export type UsersShape = ModelObject<Users>;

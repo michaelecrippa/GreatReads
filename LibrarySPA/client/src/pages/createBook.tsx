@@ -58,11 +58,10 @@ export function CreateBook() {
 
     try {
       createBook();
+      navigate('/');
     } catch (exception) {
       setComponentState({ ...componentState, error: exception });
     }
-
-    navigate('/');
   }
 
   const createBook = async () => {

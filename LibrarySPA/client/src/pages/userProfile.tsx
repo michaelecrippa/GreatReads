@@ -23,7 +23,7 @@ export function UserProfile() {
   };
 
   return (
-    <div>
+    <div style={{margin: "5em"}}>
       <AppBar position="static" color='secondary'>
         <Tabs value={value} onChange={handleChange} aria-label="profile-tabs">
           <Tab label="My Profile" {...a11yProps(0)} />

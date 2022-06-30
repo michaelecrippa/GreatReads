@@ -14,16 +14,17 @@ export interface LoginProps {
   password: string,
 }
 
-type UserChangeHandler = (user: UserAuth | null) => void;
+type UserChangeHandler = (user: UserAuth | undefined) => void;
 
 export class AuthService {
-  private handler: UserChangeHandler | null = null;
+  private handler: UserChangeHandler | undefined = undefined;
 
-  set changeHandler(handler: UserChangeHandler | null) {
+  set changeHandler(handler: UserChangeHandler | undefined) {
     this.handler = handler;
   }
 
-  private setCurrentUser(user: UserAuth | null) {
+  private setCurrentUser(user: UserAuth | undefined) {
+    console.log(user);
     if (user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
     } else {
@@ -34,16 +35,16 @@ export class AuthService {
     this.handler?.(user);
   }
 
-  get storedUser(): UserAuth | null {
+  get storedUser(): UserAuth | undefined {
     const userJson = localStorage.getItem('currentUser');
     const currentUser: UserAuth = userJson && JSON.parse(userJson);
 
-    return currentUser ?? null;
+    return currentUser ?? undefined;
   }
 
 
   async login({ username, password }: LoginProps) {
-    const userAuth = await httpService.post<UserAuth>('/users/login', {
+    const userAuth = await httpService.post<UserAuth>('/auth/login', {
       usernameOrEmail: username,
       password
     });
@@ -52,7 +53,7 @@ export class AuthService {
   }
 
   public logout() {
-    this.setCurrentUser(null);
+    this.setCurrentUser(undefined);
   }
 }
 

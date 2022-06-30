@@ -2,10 +2,8 @@ import {
   Box,
   Link,
   Container,
-  FormControl,
   InputAdornment,
   Input,
-  CircularProgress,
   Button,
   Typography
 } from '@mui/material';
@@ -15,12 +13,12 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import ForwardIcon from '@mui/icons-material/Forward';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { authService } from '../services/authService';
 
 export function Login() {
   let navigate = useNavigate();
-  //TODO merge into a single state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [logginError, setLogginError] = useState<string>('');
@@ -39,10 +37,9 @@ export function Login() {
   }
 
   return (
-    <Container maxWidth='md'>
+    <Container maxWidth='md' sx={{margin: '5em'}}>
       <form onSubmit={submit}>
         <Box>
-          <FormControl>
             <Input
               name='username'
               id='input-email/username'
@@ -51,7 +48,7 @@ export function Login() {
               value={username}
               startAdornment={
                 <InputAdornment position='start'>
-                  <CircularProgress />
+                  <AccountCircleIcon />
                 </InputAdornment>
               }
               inputProps={{ 'variant': 'outlined' }}
@@ -78,7 +75,6 @@ export function Login() {
               startIcon={<ForwardIcon />}
             > Log in </Button>
             <Typography>{logginError}</Typography>
-          </FormControl>
         </Box>
       </form>
       <Typography>

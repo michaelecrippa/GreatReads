@@ -1,42 +1,62 @@
 import { NextFunction, Request, Response } from 'express';
 import { CreateUserDto } from '@dtos/users.dto';
-import { RequestWithUser } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
-import AuthService from '@services/auth.service';
+import UserService from '@/services/users.service';
+import { ValidationError } from '@/exceptions/ValidationException';
+import { LoginInput } from '@/dtos/loginUser.dto';
+import { UserTransformer } from '@/transformers/userTransformer';
 
 class AuthController {
-  public authService = new AuthService();
+  public userService = new UserService();
+  private userTransformer = new UserTransformer();
 
-  public signUp = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public signUp = async (req: Request, res: Response): Promise<void> => {
     try {
       const userData: CreateUserDto = req.body;
-      const signUpUserData: User = await this.authService.signup(userData);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      if (!userData || (!userData.name && !userData.email && !userData.password)) {
+        res.status(400).send({ message: 'Incomplete parameters!' });
+        return;
+      }
+
+      const signUpUserData = await this.userService.register(userData);
+      if (!signUpUserData) {
+        res.status(500).json({ message: 'Internal error occured while performing registration!' });
+        return;
+      }
+
+      res.status(201).json({ data: signUpUserData, message: 'User successfulty registered!' });
     } catch (error) {
-      next(error);
+      if (error instanceof ValidationError) {
+        res.status(400).send({ key: error.key, name: error.name, message: error.message });
+        return;
+      }
+      res.json({ message: error.message });
     }
   };
 
   public logIn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: CreateUserDto = req.body;
-      const { cookie, findUser } = await this.authService.login(userData);
+      const { usernameOrEmail, password }: LoginInput = req.body;
 
-      res.setHeader('Set-Cookie', [cookie]);
-      res.status(200).json({ data: findUser, message: 'login' });
-    } catch (error) {
-      next(error);
-    }
-  };
+      if (!usernameOrEmail || !password) {
+        res.status(400).send({ message: 'Incomplete parameters!' });
+        return;
+      }
 
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const userData: User = req.user;
-      const logOutUserData: User = await this.authService.logout(userData);
+      let user: User | null;
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      user = await this.userService.nameLogin(usernameOrEmail, password);
+      if (!user) {
+        user = await this.userService.emailLogin(usernameOrEmail, password);
+      }
+
+      if (!user) {
+        res.status(401).json({ message: 'Invalid username / email or password!' });
+        return;
+      }
+
+      res.json({ data: this.userTransformer.transformWithToken(user) });
     } catch (error) {
       next(error);
     }

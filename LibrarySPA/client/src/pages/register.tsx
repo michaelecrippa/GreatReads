@@ -18,11 +18,12 @@ import { GENDERS } from '../constats/genderConstants';
 import { NationalityDTO } from '../models/Common/nationality.model';
 import { ComponentState } from '../models/Components/componentState.interface';
 import { useFormInput } from '../hooks/useInput';
+import { useAsyncAction } from '../hooks/useAsyncAction';
 
 export function Register() {
   let navigate = useNavigate();
 
-  const [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
+  let [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
     data: undefined,
     availableEntities: [] as NationalityDTO[],
     loading: true,
@@ -56,24 +57,7 @@ export function Register() {
     nationality: ''
   });
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-
-    try {
-      submitUser();
-
-      await authService.login({
-        username: input.name,
-        password: input.password
-      });
-    } catch (exception) {
-      setComponentState({ ...componentState, error: exception });
-    }
-
-    navigate('/');
-  }
-
-  const submitUser = async () => {
+  const { perform: submitUser, error, loading } = useAsyncAction(async () => {
     await userService.createUser({
       name: input.name,
       email: input.email,
@@ -82,9 +66,22 @@ export function Register() {
       sex: input.sex,
       nationality: input.nationality
     });
+    
+    await authService.login({
+      username: input.name, 
+      password: input.password
+    });
+
+    navigate("/");
+  }, [input]);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+
+    submitUser();
   }
 
-  const globalError = globalErrorMessage(componentState.error);
+  const globalError = globalErrorMessage(error);
 
   return (
     <Container maxWidth="sm">
@@ -97,41 +94,46 @@ export function Register() {
 
       <form onSubmit={submit}>
         <TextField
+          required
           label="Name"
           value={input.name}
-          error={hasError('name', componentState.error)}
-          helperText={errorMessageFor('name', componentState.error)}
+          error={hasError('name', error)}
+          helperText={errorMessageFor('name', error)}
           onChange={onChange('name')} />
 
         <TextField
+          required
           label="Email"
+          type='email'
           value={input.email}
-          error={hasError('email', componentState.error)}
-          helperText={errorMessageFor('email', componentState.error)}
+          error={hasError('email', error)}
+          helperText={errorMessageFor('email', error)}
           onChange={onChange('email')} />
 
         <TextField
+          required
           label="Password"
           value={input.password}
           type='password'
-          error={hasError('password', componentState.error)}
-          helperText={errorMessageFor('password', componentState.error)}
+          error={hasError('password', error)}
+          helperText={errorMessageFor('password', error)}
           onChange={onChange('password')} />
 
         <TextField
+          required
           label="Confirm password"
           value={input.confirmPassword}
           type='password'
-          error={hasError('confirmPassword', componentState.error)}
-          helperText={errorMessageFor('confirmPassword', componentState.error)}
+          error={hasError('confirmPassword', error)}
+          helperText={errorMessageFor('confirmPassword', error)}
           onChange={onChange('confirmPassword')} />
 
         <TextField
           label="Gender"
           value={input.sex}
           select
-          error={hasError('sex', componentState.error)}
-          helperText={errorMessageFor('sex', componentState.error)}
+          error={hasError('sex', error)}
+          helperText={errorMessageFor('sex', error)}
           onChange={onChange('sex')}>
           {GENDERS.map((genderOption) => (
             <MenuItem value={genderOption.value} key={genderOption.value}>
@@ -144,8 +146,8 @@ export function Register() {
           label="Nationality"
           value={input.nationality}
           select
-          error={hasError('nationality', componentState.error)}
-          helperText={errorMessageFor('nationality', componentState.error)}
+          error={hasError('nationality', error)}
+          helperText={errorMessageFor('nationality', error)}
           onChange={onChange('nationality')}>
           {componentState.availableEntities &&
             componentState.availableEntities.map((nationalityOptions: NationalityDTO) => (
@@ -155,8 +157,8 @@ export function Register() {
             ))}
         </TextField>
 
-        <Button type="submit" variant="contained" disabled={componentState.loading}>
-          {componentState.loading ? <CircularProgress /> : 'Submit'}
+        <Button type="submit" variant="contained" disabled={loading}>
+          {loading ? <CircularProgress /> : 'Submit'}
         </Button>
 
         {globalError && <Typography color="secondary">{globalError}</Typography>}

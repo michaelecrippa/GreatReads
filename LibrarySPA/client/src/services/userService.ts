@@ -4,7 +4,7 @@ import { UserInput } from '../models/User/userInput.model';
 
 class UserService {
   async createUser(input: UserInput) {
-    await httpService.post('/users/register', input);
+    await httpService.post('/auth/register', input);
   }
 
   async takeUserInfo(id: number) {

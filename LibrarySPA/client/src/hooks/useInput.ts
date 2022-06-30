@@ -14,7 +14,7 @@ export function useFormInput<T extends {}>(initialvalues: T) {
       },
 
     hasError: (key: keyof T, error: any) => error?.body?.key === key,
-    errorMessageFor: (key: keyof T, error: any) => {
+    errorMessageFor: (key: keyof T, error: any): string | undefined => {
       if (error?.body?.key === key) {
         return error.body.message;
       }

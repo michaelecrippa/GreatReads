@@ -5,10 +5,10 @@ import { BookInput } from '../models/Book/bookInput.interface';
 class BookService {
   async loadBooks(genre: string | undefined, filter: string, userId?: number): Promise<BookModel[]> {
     if (userId) {
-      let url = `/books/allBooks/?id=${userId}&`;
+      let url = `/books/likedBooks/?id=${userId}&`;
       return await (genre ? this.loadBooksByPath(url, filter, genre) : this.loadBooksByPath(url, filter));
     } else {
-      let url = '/books/allBooks/?';
+      let url = '/books/likedBooks/?';
       return await (genre ? this.loadBooksByPath(url, filter, genre) : this.loadBooksByPath(url, filter));
     }
   }

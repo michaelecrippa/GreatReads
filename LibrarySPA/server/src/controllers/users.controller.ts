@@ -19,7 +19,7 @@ class UsersController {
   public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const findOneUserData: User = await this.userService.findUserById(userId);
+      const findOneUserData: User = await this.userService.getUserById(userId);
 
       res.status(200).json({ data: findOneUserData, message: 'findOne' });
     } catch (error) {
@@ -30,7 +30,7 @@ class UsersController {
   public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userData: CreateUserDto = req.body;
-      const createUserData: User = await this.userService.createUser(userData);
+      const createUserData: User = await this.userService.register(userData);
 
       res.status(201).json({ data: createUserData, message: 'created' });
     } catch (error) {

@@ -1,6 +1,6 @@
 import { BaseError } from '../auth/baseError';
 import { authService } from './authService';
-import { REACT_APP_SERVER_ADDRESS } from '../config';
+import { REACT_APP_SERVER_ADDRESS as serverURL } from '../config/index';
 
 export class HttpError extends BaseError {
   constructor(public response: Response, public body: any) {
@@ -22,7 +22,7 @@ export class HttpService {
   private async request<T>(path: string, method: string, body?: Record<string, any>) {
     const userToken = authService.storedUser?.token;
 
-    const response = await fetch(`${REACT_APP_SERVER_ADDRESS}${path}`, {
+    const response = await fetch(`${serverURL}${path}`, {
       method,
       headers: {
         'Content-Type': 'application/json',
@@ -40,9 +40,9 @@ export class HttpService {
       }
       throw new HttpError(response, responseBody);
     }
-    const responseBody: T = await response.json();
+    const responseBody: { data: T} = await response.json();
 
-    return responseBody;
+    return responseBody.data;
   }
 }
 
