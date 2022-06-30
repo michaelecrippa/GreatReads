@@ -1,7 +1,8 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { bookService } from '../services/bookService';
+import { formService } from '../services/formService';
 import { useFormInput } from '../hooks/useInput';
 import { ComponentState } from '../models/Components/componentState.interface';
 
@@ -13,24 +14,12 @@ import {
   Typography, 
   MenuItem 
 } from '@mui/material';
-
-//todo select genres from db
-const genres = [
-  { value: 'Novel' },
-  { value: 'Fantasy' },
-  { value: 'History' },
-  { value: 'Horror' },
-  { value: 'Classic' },
-  { value: 'Adventure' },
-  { value: 'Comic' },
-  { value: 'Thriller' },
-  { value: 'Other' },
-];
+import { GenreDTO } from '../models/Common/genres.model';
 
 export function CreateBook() {
   const navigate = useNavigate();
 
-  const [componentState, setComponentState] = useState<ComponentState<undefined>>({
+  const [componentState, setComponentState] = useState<ComponentState<GenreDTO>>({
     data: undefined,
     availableEntities: [],
     loading: true,
@@ -52,14 +41,31 @@ export function CreateBook() {
     date: ''
   });
 
+  const getGenres = async () => {
+    try {
+      const genres = await formService.takeGenres();
+
+      setComponentState({ availableEntities: genres, loading: false, error: undefined, data: undefined });
+    } catch (exception) {
+      setComponentState({ availableEntities: [], loading: false, error: exception, data: undefined });
+    }
+  }
+
+  useEffect(() => { getGenres() }, [])
+
   async function create(event: FormEvent) {
     event.preventDefault();
 
-    createBook();
+    try {
+      createBook();
+    } catch (exception) {
+      setComponentState({ ...componentState, error: exception });
+    }
+
+    navigate('/');
   }
 
   const createBook = async () => {
-    //TODO update component state
     await bookService.createBook({
       title: input.title,
       author: input.author,
@@ -68,8 +74,6 @@ export function CreateBook() {
       description: input.description,
       date: input.date
     });
-
-    navigate('/');
   }
 
   const globalError = globalErrorMessage(componentState.error);
@@ -104,9 +108,9 @@ export function CreateBook() {
           error={hasError('genre', componentState.error)}
           helperText={errorMessageFor('genre', componentState.error)}
           onChange={onChange('genre')}>
-          {genres.map((option) => (
-            <MenuItem value={option.value}>
-              {option.value}
+          {componentState.availableEntities.map((option: GenreDTO) => (
+            <MenuItem value={option.id}>
+              {option.name}
             </MenuItem>
           ))}
         </TextField>

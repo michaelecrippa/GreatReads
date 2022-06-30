@@ -15,12 +15,13 @@ import { userService } from '../services/userService';
 import { formService } from '../services/formService';
 import { GENDERS } from '../constats/genderConstants';
 
-import { NationalityDTO } from '../models/nationality.model';
+import { NationalityDTO } from '../models/Common/nationality.model';
 import { ComponentState } from '../models/Components/componentState.interface';
 import { useFormInput } from '../hooks/useInput';
 
 export function Register() {
   let navigate = useNavigate();
+
   const [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
     data: undefined,
     availableEntities: [] as NationalityDTO[],
@@ -58,11 +59,21 @@ export function Register() {
   async function submit(event: FormEvent) {
     event.preventDefault();
 
-    submitUser();
+    try {
+      submitUser();
+
+      await authService.login({
+        username: input.name,
+        password: input.password
+      });
+    } catch (exception) {
+      setComponentState({ ...componentState, error: exception });
+    }
+
+    navigate('/');
   }
 
   const submitUser = async () => {
-    //TODO update component state
     await userService.createUser({
       name: input.name,
       email: input.email,
@@ -71,15 +82,10 @@ export function Register() {
       sex: input.sex,
       nationality: input.nationality
     });
-
-    await authService.login({
-      username: input.name,
-      password: input.password
-    });
-    navigate('/');
   }
 
   const globalError = globalErrorMessage(componentState.error);
+
   return (
     <Container maxWidth="sm">
       <Typography
@@ -156,5 +162,5 @@ export function Register() {
         {globalError && <Typography color="secondary">{globalError}</Typography>}
       </form>
     </Container>
-  )
+  );
 }
