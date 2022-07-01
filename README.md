@@ -6,7 +6,8 @@ The application is separated into two folders cliend and server. The client side
 
 Available scripts(the whole list of scripts is available in the package-lock of the client/server folder)  
 
-Note: The following scripts must be performed from the appropriate directory of the application
+Note: The following scripts must be performed from the appropriate directory of the application  
+
 client
  - start - runs the UI side of the application, the port on which the application is available is specified in the required .env file 
  - test - runs defined tests for the client side code (visit Jest docs for more information)
