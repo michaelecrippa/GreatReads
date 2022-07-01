@@ -8,15 +8,10 @@ class BookController {
 
   public getBooks = async (request: Request, response: Response, nextFunction: NextFunction) => {
     try {
-      const pageNumber = Number(request.query.pageNumber);
-      const pageSize = Number(request.query.pageSize);
-      const filter = typeof request.query?.filter === 'string' ? request.query.filter : undefined;
+      const genre = Number(request.query?.genre);
+      const filter = request.query?.filter?.toString();
 
-      if (!Number.isInteger(pageNumber) || !Number.isInteger(pageSize)) {
-        response.status(400).json({ error: 'Parameters must be integers!' });
-        return;
-      }
-      const books = await this.bookService.listBooks(pageNumber, pageSize, filter);
+      const books = await this.bookService.fetchAll(genre, filter);
 
       response.json({ data: books });
     } catch (error) {
@@ -28,6 +23,20 @@ class BookController {
     try {
       const id = Number(request.query.id);
       const book = await this.bookService.fetchWithAuthorById(id);
+
+      response.json({ data: book });
+    } catch (error) {
+      nextFunction(error);
+    }
+  };
+
+  public getLikedBooks = async (request: Request, response: Response, nextFunction: NextFunction) => {
+    try {
+      const id = Number(request.query.id);
+      const genre = Number(request.query?.genre);
+      const filter = request.query?.filter?.toString();
+
+      const book = await this.bookService.fetchLikedBooks(id, genre, filter);
 
       response.json({ data: book });
     } catch (error) {

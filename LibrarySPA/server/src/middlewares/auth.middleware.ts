@@ -53,8 +53,8 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
         res.status(401).json({ error: 'Invalid auth type!' });
         return;
     }
-
     res.locals.user = user;
+    next();
   } catch (error) {
     next(new HttpException(401, 'Wrong authentication token'));
   }

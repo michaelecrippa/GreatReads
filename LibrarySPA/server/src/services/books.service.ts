@@ -20,10 +20,10 @@ export class BookService {
   }
 
   private async createBook(input: BookInput) {
-    const date = input.date ? new Date(input.date) : null;
-    const pages = input.pages ? Number(input.pages) : null;
+    const date = input.date ? new Date(input.date) : undefined;
+    const pages = input.pages ? Number(input.pages) : undefined;
 
-    let authorId = (await this.takeRelatedAuthorId(input.author)).id;
+    let authorId = (await this.takeRelatedAuthorId(input.author))?.id;
 
     if (!authorId) {
       const authorService = new AuthorService();
@@ -55,12 +55,15 @@ export class BookService {
   }
 
   async fetchWithAuthorById(id: number) {
-    const book = await BookModel.query().where({ id }).first().withGraphFetched('authorInfo');
+    const book = await BookModel.query()
+      .where({ id })
+      .first()
+      .withGraphFetched('authorInfo');
 
     return bookTransformer.transformWithAuthor(book);
   }
 
-  async fetchAllWithAuthor(genre?: string, filter?: string) {
+  async fetchAll(genre?: number, filter?: string) {
     let books: BookModel[];
 
     if (genre !== undefined && filter !== undefined) {
@@ -76,59 +79,56 @@ export class BookService {
     }
     else if (genre !== undefined) {
       books = await BookModel.query()
-        .where('genre', genre)
+        .where({ genre })
         .withGraphFetched('authorInfo');
     }
     else {
-      books = await BookModel.query().withGraphFetched('authorInfo');
+      books = await BookModel.query()
+        .withGraphFetched('authorInfo');
     }
 
     return books.map(book => bookTransformer.transformWithAuthor(book));
   }
 
-  fetchAll() {
-    return BookModel.query();
-  }
-
-  async fetchLikedBooks(id: number, genre?: string, filter?: string) {
+  async fetchLikedBooks(id: number, genre?: number, filter?: string) {
     let likes: LikeModel[];
     if (genre !== undefined && filter !== undefined) {
       likes = await LikeModel.query()
-        .where('userId', id)
-        .withGraphFetched('books.authorInfo')
+        .where('user_id', id)
+        .withGraphFetched('books')
         .modifyGraph('books', builder => {
           builder
-            .where('genre', genre)
+            .where({ genre })
             .andWhere('title', 'ILIKE', `%${filter}%`);
         });
     }
     else if (filter !== undefined) {
       likes = await LikeModel.query()
-        .where('userId', id)
-        .withGraphFetched('books.authorInfo')
-        .modifyGraph('books', builder => {
+        .where('user_id', id)
+        .withGraphFetched('book')
+        .modifyGraph('book', builder => {
           builder.where('title', 'ILIKE', `%${filter}%`);
         });
     }
     else if (genre !== undefined) {
+      console.log('asd');
       likes = await LikeModel.query()
-        .where('userId', id)
-        .withGraphFetched('books.authorInfo')
-        .modifyGraph('books', builder => {
-          builder.where('genre', genre);
+        .where('user_id', id)
+        .withGraphFetched('book')
+        .modifyGraph('book', builder => {
+          builder.where({ genre });
         });
     }
     else {
       likes = await LikeModel.query()
-        .where('userId', id)
-        .withGraphFetched('books.authorInfo');
+        .where('user_id', id)
+        .withGraphFetched('books');
     }
-
     return likes.map(like => bookTransformer.transformLikedBooksWithAuthor(like))
   }
 
   fetchByTitle(title: string) {
-    return BookModel.query().select().where({ title: title }).first();
+    return BookModel.query().select().where({ title }).first();
   }
 
   fetchByAuthor(author: string) {
@@ -158,14 +158,14 @@ export class BookService {
 
   private createComment(input: CommentInput) {
     return CommentModel.query().insert({
-      bookId: Number(input.bookId),
-      userId: Number(input.userId),
+      book_id: Number(input.bookId),
+      user_id: Number(input.userId),
       comment: input.text
     });
   }
 
   addLike(bookId: number, userId: number) {
-    return LikeModel.query().insert({ bookId, userId });
+    return LikeModel.query().insert({ book_id: bookId, user_id: userId });
   }
 
   fetchComments(bookId: number) {

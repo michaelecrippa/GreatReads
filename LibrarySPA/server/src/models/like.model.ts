@@ -1,32 +1,34 @@
 import { Model } from 'objection';
 import { BaseModel } from './base.model';
 import { BookModel } from './book.model';
+import { UserModel } from './users.model';
 
 export class LikeModel extends BaseModel {
   static tableName = 'likes';
 
   static relationMappings = {
-    users: {
-      relation: Model.HasManyRelation,
+    user: {
+      relation: Model.BelongsToOneRelation,
       join: {
-        from: 'likes.userId',
+        from: 'likes.user_id',
         to: 'users.id',
       },
-      modelClass: 'user',
+      modelClass: UserModel,
     },
-    books: {
-      relation: Model.HasManyRelation,
+    book: {
+      relation: Model.BelongsToOneRelation,
       join: {
-        from: 'likes.bookId',
+        from: 'likes.book_id',
         to: 'books.id',
       },
-      modelClass: 'book',
+      modelClass: BookModel,
     },
   };
 
   id!: number;
-  bookId!: number;
-  userId!: number;
+  book_id!: number;
+  user_id!: number;
 
-  books?: BookModel[];
+  book?: BookModel;
+  user?: UserModel;
 }

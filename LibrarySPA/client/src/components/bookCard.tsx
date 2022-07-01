@@ -6,25 +6,34 @@ import {
   Container,
   CardContent,
   Link,
-  Button
+  Button, 
+  Box
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 import { Link as RouterLink } from 'react-router-dom';
+import { GenreDTO } from '../models/Common/genres.model';
+import './bookCard.css';
+import { BookModel } from '../models/Book/bookModel.interface';
 
-export function BookCard({ book }: any) {
+interface BookCardProps {
+  book: BookModel;
+  genres: GenreDTO[];
+}
+
+export function BookCard({ book, genres }: BookCardProps) {
   return (
-    <Card>
+    <Card className='book-card-root'>
       <CardHeader
         title={book?.title}
         subheader={book?.author}
       />
-      <CardMedia />
-      <CardContent>
-        <Container>
+      <CardMedia className='book-card-media' />
+      <CardContent className='content'>
+        <Container className='content-start'>
           {book.genre ?
             <Typography variant="h6" color="textSecondary" aria-label="genre">
-              Genre: {book.genre}
+              Genre: {genres.find(genre => genre.id === Number(book.genre))?.name}
             </Typography> : undefined
           }
           {book.pages ?
@@ -39,13 +48,15 @@ export function BookCard({ book }: any) {
           }
         </Container>
         {book?.description &&
-          <Typography color="textSecondary" aria-label="book description">
-            {book.description}
-          </Typography>
+          <Box style={{maxHeight: '50px', overflowY: 'hidden'}}>
+            <Typography color="textSecondary" aria-label="book description">
+              {book.description}
+            </Typography>
+          </Box>
         }
-        <Link component={RouterLink} to={`/book/:id=${book.id}`} underline="none" color="inherit">
-          <Button variant='contained' color='primary' aria-label="explore-more">
-            <MoreHorizIcon />
+        <Link component={RouterLink} to={`/book/${book.id}`} underline="none" color="inherit">
+          <Button className='explore-button' variant='contained' color='primary' aria-label="explore-more">
+            <MoreHorizIcon className='margin-right' />
             Explore
           </Button>
         </Link>

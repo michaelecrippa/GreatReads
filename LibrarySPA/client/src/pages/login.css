@@ -1,0 +1,42 @@
+.login {
+    margin-top: 12em;;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    max-width: 100%;
+}
+
+.input {
+    margin: 5px;
+    width: 450px;
+    font-size: 20px;
+}
+
+.inputContainer {
+    align-items: center;
+    max-width: 700px;
+}
+
+.submitButton {
+    align-items: center;
+    max-width: 100%;
+}
+
+.logginError {
+    align-items: center;
+    font-size: 1.2rem !important;
+    color: red;
+}
+
+.registration {
+    font-size: large !important;
+    display: flex !important;
+    gap: 10px;
+    justify-content: center; 
+    align-items: center;
+    margin-top: 2rem !important;
+}

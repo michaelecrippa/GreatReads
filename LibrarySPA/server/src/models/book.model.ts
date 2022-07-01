@@ -12,25 +12,25 @@ export class BookModel extends BaseModel {
       relation: Model.HasManyRelation,
       join: {
         from: 'books.id',
-        to: 'likes.bookId',
+        to: 'likes.book_id',
       },
-      modelClass: 'like',
+      modelClass: LikeModel,
     },
     comments: {
       relation: Model.HasManyRelation,
       join: {
         from: 'books.id',
-        to: 'comments.bookId',
+        to: 'comments.book_id',
       },
-      modelClass: 'comment',
+      modelClass: CommentModel,
     },
     authorInfo: {
-      relation: Model.HasManyRelation,
+      relation: Model.BelongsToOneRelation,
       join: {
         from: 'books.author',
         to: 'authors.id',
       },
-      modelClass: 'author',
+      modelClass: AuthorModel,
     },
   };
 
@@ -42,7 +42,7 @@ export class BookModel extends BaseModel {
   description!: string | null;
   date!: Date | null;
 
-  authorInfo?: AuthorModel[];
+  authorInfo?: AuthorModel;
   likes?: LikeModel[];
   comments?: CommentModel[];
 }

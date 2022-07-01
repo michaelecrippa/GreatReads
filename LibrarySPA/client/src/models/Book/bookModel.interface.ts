@@ -3,7 +3,7 @@ export interface BookModel {
   title: string,
   author: string,
   description: string,
-  genre?: string,
+  genre?: number,
   pages?: number,
   date?: string
 }

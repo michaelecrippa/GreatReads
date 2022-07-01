@@ -7,12 +7,14 @@ import {
   Typography 
 } from "@mui/material"
 
+import './userProfileInfo.css'
+
 export function UserProfileInfo({ user } : any) {
   return (
-    <Box>
-      <Card>
+    <Box className='container'>
+      <Card className='card'>
         <Box display='flex' flexDirection='row' alignItems='center' justifyItems='space-between'>
-          <Avatar aria-label="recipe">
+          <Avatar className='avatar' aria-label="recipe">
             {(user.name ? user.name : user.email).slice(0, 1).toLocaleUpperCase()}
           </Avatar>
           <CardHeader

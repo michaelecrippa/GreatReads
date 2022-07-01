@@ -1,0 +1,20 @@
+.root {
+  display: flex;
+  flex-direction: column;
+	height: 100%;
+}
+
+.heading {
+  margin-top: 4rem !important;
+  margin-bottom: 3rem !important;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10;
+}
+
+.formControl {
+
+}

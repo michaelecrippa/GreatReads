@@ -1,10 +1,12 @@
-import { AppBar, Tabs, Tab } from "@mui/material"; 
+import { AppBar, Tabs, Tab, Box } from "@mui/material";
 
 import { useState } from "react";
 import { TabPanel } from "../components/TabPanel";
 
+import './userProfile.css';
+
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { UserProfileInfo} from '../components/userProfileInfo';
+import { UserProfileInfo } from '../components/userProfileInfo';
 import { BookLibrary } from '../pages/bookLibrary';
 
 function a11yProps(index: any) {
@@ -23,8 +25,8 @@ export function UserProfile() {
   };
 
   return (
-    <div style={{margin: "5em"}}>
-      <AppBar position="static" color='secondary'>
+    <Box className='root'>
+      <AppBar className='appBar' position="static" color='secondary'>
         <Tabs value={value} onChange={handleChange} aria-label="profile-tabs">
           <Tab label="My Profile" {...a11yProps(0)} />
           <Tab label="Liked Books" {...a11yProps(1)} />
@@ -34,8 +36,8 @@ export function UserProfile() {
         {currentUser && <UserProfileInfo user={currentUser} />}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {currentUser?.id && <BookLibrary id={currentUser?.id} />}
+        <BookLibrary userId={currentUser?.id} />
       </TabPanel>
-    </div>
+    </Box>
   );
 }

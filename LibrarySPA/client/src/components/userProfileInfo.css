@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  margin: 3px;
+  width: 30%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  background-color: #d8dfed;
+}
+
+.media {
+  height: 5% !important;
+  padding-top: 56.25%;
+  margin: 20px;
+}
+
+.avatar {
+  background-color: #3f7b99;
+  justify-self: flex-end;
+  margin-left: 20px;
+}

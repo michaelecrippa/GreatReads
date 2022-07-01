@@ -5,21 +5,23 @@ import { bookService } from '../services/bookService';
 import { formService } from '../services/formService';
 import { useFormInput } from '../hooks/useInput';
 import { ComponentState } from '../models/Components/componentState.interface';
+import { useAsyncAction } from '../hooks/useAsyncAction';
 
-import { 
-  Button, 
-  CircularProgress, 
-  Container, 
-  TextField, 
-  Typography, 
-  MenuItem 
+import {
+  Button,
+  CircularProgress,
+  Container,
+  TextField,
+  Typography,
+  MenuItem
 } from '@mui/material';
 import { GenreDTO } from '../models/Common/genres.model';
+import './createBook.css';
 
 export function CreateBook() {
   const navigate = useNavigate();
 
-  const [componentState, setComponentState] = useState<ComponentState<GenreDTO>>({
+  const [componentState, setComponentState] = useState<ComponentState<GenreDTO, undefined>>({
     data: undefined,
     availableEntities: [],
     loading: true,
@@ -53,62 +55,65 @@ export function CreateBook() {
 
   useEffect(() => { getGenres() }, [])
 
-  async function create(event: FormEvent) {
-    event.preventDefault();
 
-    try {
-      createBook();
-      navigate('/');
-    } catch (exception) {
-      setComponentState({ ...componentState, error: exception });
-    }
-  }
-
-  const createBook = async () => {
+  const { perform: submitBook, error, loading } = useAsyncAction(async () => {
     await bookService.createBook({
       title: input.title,
       author: input.author,
-      genre: input.genre.toLocaleLowerCase(),
+      genre: input.genre,
       pages: input.pages,
       description: input.description,
       date: input.date
     });
+
+    navigate("/books/");
+  }, [input]);
+
+  async function create(event: FormEvent) {
+    event.preventDefault();
+
+    submitBook();
   }
 
-  const globalError = globalErrorMessage(componentState.error);
+  const globalError = globalErrorMessage(error);
 
   return (
-    <Container maxWidth="sm">
+    <Container className='root' maxWidth="sm">
       <Typography
+        className='heading'
         component="h1"
         variant="h4"
-        align="center">Create a book
+        align="center">
+        Create a book
       </Typography>
 
-      <form onSubmit={create}>
+      <form className='form' onSubmit={create}>
         <TextField
+          required
           label="Title"
           value={input.title}
-          error={hasError('title', componentState.error)}
-          helperText={errorMessageFor('title', componentState.error)}
+          error={hasError('title', error)}
+          helperText={errorMessageFor('title', error)}
           onChange={onChange('title')} />
 
         <TextField
+          required
           label='Author'
           value={input.author}
-          error={hasError('author', componentState.error)}
-          helperText={errorMessageFor('author', componentState.error)}
+          error={hasError('author', error)}
+          helperText={errorMessageFor('author', error)}
           onChange={onChange('author')} />
 
         <TextField
+          required
           label='Genre'
           value={input.genre}
           select
-          error={hasError('genre', componentState.error)}
-          helperText={errorMessageFor('genre', componentState.error)}
+          error={hasError('genre', error)}
+          helperText={errorMessageFor('genre', error)}
           onChange={onChange('genre')}>
           {componentState.availableEntities.map((option: GenreDTO) => (
-            <MenuItem value={option.id}>
+            <MenuItem key={option.id} value={option.id}>
               {option.name}
             </MenuItem>
           ))}
@@ -122,32 +127,30 @@ export function CreateBook() {
             step: 1
           }}
           value={input.pages}
-          error={hasError('pages', componentState.error)}
-          helperText={errorMessageFor('pages', componentState.error)}
+          error={hasError('pages', error)}
+          helperText={errorMessageFor('pages', error)}
           onChange={onChange('pages')} />
-
 
         <TextField
           label='Description'
           value={input.description}
-          error={hasError('description', componentState.error)}
-          helperText={errorMessageFor('description', componentState.error)}
+          error={hasError('description', error)}
+          helperText={errorMessageFor('description', error)}
           onChange={onChange('description')} />
 
         <TextField
           label='Published date'
           type="date"
-          defaultValue="2012.12.12"
           value={input.date}
-          error={hasError('date', componentState.error)}
-          helperText={errorMessageFor('date', componentState.error)}
+          error={hasError('date', error)}
+          helperText={errorMessageFor('date', error)}
           onChange={onChange('date')}
           InputLabelProps={{
             shrink: true,
           }}
         />
 
-        <Button type="submit" variant="contained" disabled={componentState.loading}>
+        <Button type="submit" variant="contained" disabled={loading}>
           {componentState.loading ? <CircularProgress /> : 'Submit'}
         </Button>
 

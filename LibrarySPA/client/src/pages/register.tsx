@@ -10,6 +10,8 @@ import {
   MenuItem
 } from '@mui/material';
 
+import './register.css';
+
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
 import { formService } from '../services/formService';
@@ -23,7 +25,7 @@ import { useAsyncAction } from '../hooks/useAsyncAction';
 export function Register() {
   let navigate = useNavigate();
 
-  let [componentState, setComponentState] = useState<ComponentState<NationalityDTO>>({
+  let [componentState, setComponentState] = useState<ComponentState<NationalityDTO, undefined>>({
     data: undefined,
     availableEntities: [] as NationalityDTO[],
     loading: true,
@@ -84,15 +86,16 @@ export function Register() {
   const globalError = globalErrorMessage(error);
 
   return (
-    <Container maxWidth="sm">
+    <Container className='root' maxWidth="sm">
       <Typography
+        className='heading'
         component="h1"
         variant="h4"
         align="center">
         Sign up
       </Typography>
 
-      <form onSubmit={submit}>
+      <form className='form' onSubmit={submit}>
         <TextField
           required
           label="Name"

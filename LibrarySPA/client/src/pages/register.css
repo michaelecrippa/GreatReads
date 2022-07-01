@@ -1,0 +1,23 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    margin-top: 64px;
+    padding: 0px 50px 30px 50px !important;
+}
+
+.heading {
+    color: rgb(63, 56, 56);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+    margin-top: 4rem !important;
+    margin-bottom: 2rem !important;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formControl {
+
+}

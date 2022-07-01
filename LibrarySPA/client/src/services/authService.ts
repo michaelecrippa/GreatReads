@@ -50,6 +50,8 @@ export class AuthService {
     });
 
     this.setCurrentUser(userAuth);
+
+    return userAuth;
   }
 
   public logout() {

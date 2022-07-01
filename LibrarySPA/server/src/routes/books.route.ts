@@ -15,6 +15,7 @@ class BooksRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}/`, authMiddleware, this.bookController.getBooks);
     this.router.get(`${this.path}/book/`, authMiddleware, this.bookController.getBook);
+    this.router.get(`${this.path}/liked/`, authMiddleware, this.bookController.getLikedBooks);
     this.router.post(`${this.path}/book/`, authMiddleware, this.bookController.addBook);
     this.router.delete(`${this.path}/book/`, authMiddleware, this.bookController.deleteBook);
     this.router.get(`${this.path}/comments/`, authMiddleware, this.bookController.getBookComments);

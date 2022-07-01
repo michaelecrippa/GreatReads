@@ -6,7 +6,7 @@ class BookTransformer {
     return {
       id: book.id,
       title: book.title,
-      author: (book.authorInfo && book.authorInfo[0].name) || 'unknown',
+      author: (book.authorInfo && book.authorInfo.name) || 'unknown',
       genre: book.genre,
       pages: book.pages,
       description: book.description,
@@ -14,17 +14,17 @@ class BookTransformer {
     };
   }
   transformLikedBooksWithAuthor(like: LikeModel) {
-    if (!like.books || like.books.length === 0) {
+    if (!like.book) {
       return undefined;
     }
     return {
-      id: like.books[0].id || 0,
-      title: like.books[0].title,
-      author: (like.books[0].authorInfo && like.books[0].authorInfo[0].name) || 'unknown',
-      genre: like.books[0].genre || undefined,
-      pages: like.books[0].pages || undefined,
-      description: like.books[0].description || undefined,
-      date: String(like.books[0].date).slice(0, 15) || undefined,
+      id: like.book.id || 0,
+      title: like.book.title,
+      author: (like.book.authorInfo && like.book.authorInfo.name) || 'unknown',
+      genre: like.book.genre || undefined,
+      pages: like.book.pages || undefined,
+      description: like.book.description || undefined,
+      date: String(like.book.date).slice(0, 15) || undefined,
     };
   }
 }

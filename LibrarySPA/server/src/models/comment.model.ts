@@ -1,38 +1,35 @@
 import { Model } from 'objection';
 import { BaseModel } from './base.model';
+import { UserModel } from './users.model';
+import { BookModel } from './book.model';
 
 export class CommentModel extends BaseModel {
   static tableName = 'comments';
 
   static relationMappings = {
-    user: {
-      relation: Model.ManyToManyRelation,
+    users: {
+      relation: Model.BelongsToOneRelation,
       join: {
-        from: 'users.id',
-        through: {
-          from: 'likes.user_id',
-          to: 'likes.book_id',
-        },
+        from: 'comments.user_id',
+        to: 'users.id',
+      },
+      modelClass: UserModel,
+    },
+    books: {
+      relation: Model.BelongsToOneRelation,
+      join: {
+        from: 'comments.book_id',
         to: 'books.id',
       },
-      modelClass: 'user',
-    },
-    book: {
-      relation: Model.ManyToManyRelation,
-      join: {
-        from: 'books.id',
-        through: {
-          from: 'likes.book_id',
-          to: 'likes.user_id',
-        },
-        to: 'user.id',
-      },
-      modelClass: 'book',
+      modelClass: BookModel,
     },
   };
 
   id!: number;
-  bookId!: number;
-  userId!: number;
+  book_id!: number;
+  user_id!: number;
   comment!: string;
+
+  book?: BookModel;
+  user?: UserModel;
 }

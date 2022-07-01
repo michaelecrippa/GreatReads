@@ -8,6 +8,8 @@ import {
   Typography
 } from '@mui/material';
 
+import './login.css';
+
 import { FormEvent, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
@@ -28,8 +30,8 @@ export function Login() {
 
     if (username && password) {
       try {
-        await authService.login({ username, password });
-        navigate('/');
+        const user = await authService.login({ username, password });
+        navigate(`/books/${user.id}`);
       } catch (error: any) {
         setLogginError(error?.message);
       }
@@ -37,10 +39,11 @@ export function Login() {
   }
 
   return (
-    <Container maxWidth='md' sx={{margin: '5em'}}>
+    <Container className='login' maxWidth='md'>
       <form onSubmit={submit}>
-        <Box>
-            <Input
+        <Box className='container'>
+            <Input 
+              className='input'
               name='username'
               id='input-email/username'
               placeholder='Name/Email'
@@ -55,6 +58,7 @@ export function Login() {
               onChange={event => setUsername(event.target.value)}
             />
             <Input
+              className='input'
               name='password'
               id='input-password'
               placeholder='Password'
@@ -68,16 +72,17 @@ export function Login() {
               inputProps={{ 'variant': 'outlined' }}
               onChange={event => setPassword(event.target.value)}
             />
+            <Typography className='logginError'>{logginError}</Typography>
             <Button
+              className='submitButton'
               type='submit'
               variant='contained'
               color="primary"
               startIcon={<ForwardIcon />}
             > Log in </Button>
-            <Typography>{logginError}</Typography>
         </Box>
       </form>
-      <Typography>
+      <Typography className='registration'>
         Doesn't have a registration?
         <Link component={RouterLink} to="/register" underline="none" color="primary">
           Sign up

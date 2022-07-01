@@ -1,6 +1,6 @@
-export interface ComponentState<T> {
+export interface ComponentState<T, U> {
   availableEntities: T[];
-  data: T | undefined;
+  data: U | undefined;
   loading: boolean;
   error: any;
 }

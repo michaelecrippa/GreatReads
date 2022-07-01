@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useCurrentUser } from '../hooks/useCurrentUser';
+import './appHeader.css';
 
 import {
   Box,
@@ -23,6 +24,7 @@ import { authService } from '../services/authService';
 
 export function AppHeader() {
   let location = useLocation();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const user = useCurrentUser();
@@ -30,16 +32,17 @@ export function AppHeader() {
   function logout() {
     setAnchorEl(null);
     authService.logout();
+    navigate('/login');
   }
 
   return (
-    <AppBar>
+    <AppBar className='position'>
       <Toolbar>
         <MenuBookRoundedIcon />
-        <Typography variant="h5" >
-          <Link component={RouterLink} to="/" underline="none" color="inherit">GreatReads</Link>
+        <Typography variant="h5" className='title'>
+          <Link component={RouterLink} to={`/books`} underline="none" color="inherit">GreatReads</Link>
         </Typography>
-        <Box >
+        <Box className='user'>
           {user ? (
             <Typography>Hello, {user.name}! </Typography>
           ) : (
@@ -55,6 +58,7 @@ export function AppHeader() {
               <AccountCircleOutlinedIcon />
             </IconButton>
             <Menu
+              className='userMenu'
               anchorEl={anchorEl}
               anchorOrigin={{
                 vertical: 'top',
@@ -68,11 +72,11 @@ export function AppHeader() {
               open={!!anchorEl}
               onClose={() => setAnchorEl(null)}
             >
-              <MenuItem component={RouterLink} to='/profile' onClick={() => { setAnchorEl(null) }}>
+              <MenuItem className='userMenuItem' component={RouterLink} to='/profile' onClick={() => { setAnchorEl(null) }}>
                 <PersonOutlineOutlinedIcon />
                 My profile
               </MenuItem>
-              <MenuItem onClick={logout}>
+              <MenuItem className='userMenuItem' onClick={logout}>
                 <ExitToAppIcon />
                 Log out
               </MenuItem>

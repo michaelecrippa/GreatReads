@@ -17,10 +17,6 @@ export class BookRegistrationValidator {
     if (this.book.author.length > 255) {
       throw new ValidationError('author', "Author's name must be shorter than 256 characters!");
     }
-
-    if (this.book.genre && this.book.genre.length > 255) {
-      throw new ValidationError('genre', 'Genre must be shorter than 256 characters!');
-    }
   }
 
   private async validateTitleUniqueness() {

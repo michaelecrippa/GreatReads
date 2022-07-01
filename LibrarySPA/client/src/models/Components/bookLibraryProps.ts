@@ -1,3 +1,3 @@
 export interface BookLibraryProps {
-  id?: number;
+  userId?: number;
 }
