@@ -24,7 +24,6 @@ export class AuthService {
   }
 
   private setCurrentUser(user: UserAuth | undefined) {
-    console.log(user);
     if (user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
     } else {

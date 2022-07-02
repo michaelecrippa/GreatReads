@@ -13,7 +13,7 @@ export class LikeModel extends BaseModel {
         from: 'likes.user_id',
         to: 'users.id',
       },
-      modelClass: UserModel,
+      modelClass: './user.model',
     },
     book: {
       relation: Model.BelongsToOneRelation,
@@ -21,7 +21,7 @@ export class LikeModel extends BaseModel {
         from: 'likes.book_id',
         to: 'books.id',
       },
-      modelClass: BookModel,
+      modelClass: './book.model',
     },
   };
 
@@ -29,6 +29,6 @@ export class LikeModel extends BaseModel {
   book_id!: number;
   user_id!: number;
 
-  book?: BookModel;
-  user?: UserModel;
+  book!: BookModel;
+  user!: UserModel;
 }

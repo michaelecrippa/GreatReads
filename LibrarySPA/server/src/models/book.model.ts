@@ -37,10 +37,11 @@ export class BookModel extends BaseModel {
   id!: number;
   title!: string;
   author!: number;
-  genre!: string | null;
-  pages!: number | null;
-  description!: string | null;
-  date!: Date | null;
+  genre!: string | undefined;
+  pages!: number | undefined;
+  description!: string | undefined;
+  date!: Date | undefined;
+  picture_uri!: string | undefined;
 
   authorInfo?: AuthorModel;
   likes?: LikeModel[];

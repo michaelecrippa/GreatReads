@@ -31,7 +31,7 @@ export function Login() {
     if (username && password) {
       try {
         const user = await authService.login({ username, password });
-        navigate(`/books/${user.id}`);
+        navigate(`/books/`);
       } catch (error: any) {
         setLogginError(error?.message);
       }

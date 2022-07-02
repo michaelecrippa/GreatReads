@@ -50,7 +50,7 @@ export function BookLibrary({ userId }: BookLibraryProps) {
       <BookList books={books} /> :
       <Box m={4} textAlign="center" style={{ color: 'black' }}>
         There aren't any books for the current filters!
-      </Box>;
+      </Box>
   }
 
   return (

@@ -56,7 +56,7 @@ export function Register() {
     password: '',
     confirmPassword: '',
     sex: '',
-    nationality: ''
+    nationality: 0
   });
 
   const { perform: submitUser, error, loading } = useAsyncAction(async () => {
@@ -74,7 +74,7 @@ export function Register() {
       password: input.password
     });
 
-    navigate("/");
+    navigate("/books");
   }, [input]);
 
   async function submit(event: FormEvent) {
@@ -146,6 +146,7 @@ export function Register() {
         </TextField>
 
         <TextField
+          required
           label="Nationality"
           value={input.nationality}
           select
@@ -154,7 +155,7 @@ export function Register() {
           onChange={onChange('nationality')}>
           {componentState.availableEntities &&
             componentState.availableEntities.map((nationalityOptions: NationalityDTO) => (
-              <MenuItem value={nationalityOptions.name} key={nationalityOptions.id}>
+              <MenuItem value={nationalityOptions.id} key={nationalityOptions.id}>
                 {nationalityOptions.name}
               </MenuItem>
             ))}

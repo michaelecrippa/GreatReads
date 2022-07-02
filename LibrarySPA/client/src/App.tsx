@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import { AppHeader } from './components/appHeader';
 import { AppFooter } from './components/appFooter';
@@ -74,6 +74,7 @@ function App() {
               <Route path='/profile' element={<UserProfile />} />
               <Route path='/books' element={<BookLibrary />} />
               <Route path='/addBook' element={<CreateBook />} />
+              <Route path="*" element={<Navigate to="/books" replace />} />
             </Route>
             <Route element={<PublicRoute />} >
               <Route path='/login' element={<Login />} />

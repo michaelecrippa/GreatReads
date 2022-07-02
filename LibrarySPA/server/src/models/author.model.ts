@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import { BaseModel } from './base.model';
+import { LikeModel } from './like.model';
 
 export class AuthorModel extends BaseModel {
   static tableName = 'authors';
@@ -11,7 +12,7 @@ export class AuthorModel extends BaseModel {
         from: 'authors.id',
         to: 'books.author',
       },
-      modelClass: 'like',
+      modelClass: LikeModel,
     },
   };
 

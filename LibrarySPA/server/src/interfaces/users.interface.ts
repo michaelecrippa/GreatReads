@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  nationality: string | undefined;
+  nationality: number | undefined;
   sex: string | undefined;
   age: number | undefined;
   token: string | undefined;

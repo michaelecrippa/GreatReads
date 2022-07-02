@@ -4,5 +4,5 @@ export interface UserInput {
   password: string;
   confirmPassword: string;
   sex?: string;
-  nationality?: string;
+  nationality?: number;
 }

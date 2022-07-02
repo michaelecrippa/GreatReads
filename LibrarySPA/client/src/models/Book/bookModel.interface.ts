@@ -5,5 +5,6 @@ export interface BookModel {
   description: string,
   genre?: number,
   pages?: number,
-  date?: string
+  date?: string,
+  pictureUri?: string;
 }

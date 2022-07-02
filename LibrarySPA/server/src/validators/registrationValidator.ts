@@ -1,17 +1,21 @@
 import { ValidationError } from '@/exceptions/ValidationException';
 import { CreateUserDto } from '@/dtos/users.dto';
 import { UserModel } from '@/models/users.model';
+import { FormService } from '@/services/form.service';
 
 export class RegistrationValidator {
-  constructor(private user: CreateUserDto) {}
+  private formService: FormService;
+  constructor(private user: CreateUserDto) {
+    this.formService = new FormService();
+  }
 
   async validate() {
-    this.validateInput();
+    await this.validateInput();
     await this.validateNameUniqueness();
     await this.validateEmailUniqueness();
   }
 
-  private validateInput() {
+  private async validateInput() {
     if (this.user.name.length > 255) {
       throw new ValidationError('name', 'Username must be shorter than 256 characters!');
     }
@@ -34,6 +38,11 @@ export class RegistrationValidator {
 
     if (!this.user.password.match(/^(?=.*\d).{4,12}$/)) {
       throw new ValidationError('password', 'Password must be between 4 and 12 characters and contain a digit!');
+    }
+
+    const availableGenres = await this.formService.fetchNations();
+    if (this.user.nationality && !availableGenres.find(nation => nation.id === this.user.nationality)) {
+      throw new ValidationError('nationality', 'Unavailable nationality selected!');
     }
   }
 

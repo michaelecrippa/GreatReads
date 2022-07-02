@@ -6,7 +6,7 @@ import {
   CardActions,
   Box,
   IconButton,
-  Typography
+  Typography,
 } from '@mui/material';
 
 import * as _ from 'lodash';
@@ -25,6 +25,7 @@ import { ComponentState } from '../models/Components/componentState.interface';
 import { BookModel } from '../models/Book/bookModel.interface';
 import { GenreDTO } from '../models/Common/genres.model';
 import { formService } from '../services/formService';
+import { defaultPicturURI } from '../constats/bookMediaCconstant';
 
 export function Book() {
   let [component, setComponentState] = useState<ComponentState<GenreDTO, BookModel>>({
@@ -59,9 +60,12 @@ export function Book() {
             title={component.data.title}
             subheader={component.data.author}
           />
-          <Box className='media-container'>
-            <CardMedia className='media' />
-          </Box>
+          <CardMedia
+            component="img"
+            height="300"
+            image={component.data.pictureUri || defaultPicturURI}
+            alt="Book cover"
+          />
           <CardContent>
             {component.data.genre &&
               <Typography variant="h6" color="textSecondary" aria-label="genre">

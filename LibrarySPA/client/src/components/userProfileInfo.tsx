@@ -1,15 +1,40 @@
-import { 
-  Box, 
-  Card, 
-  Avatar, 
-  CardHeader, 
-  CardContent, 
-  Typography 
-} from "@mui/material"
+import {
+  Box,
+  Card,
+  Avatar,
+  CardHeader,
+  CardContent,
+  Typography
+} from "@mui/material";
 
-import './userProfileInfo.css'
+import { useState, useEffect } from "react";
 
-export function UserProfileInfo({ user } : any) {
+import { NationalityDTO } from "../models/Common/nationality.model";
+import { formService } from "../services/formService";
+import { ComponentState } from "../models/Components/componentState.interface";
+
+import './userProfileInfo.css';
+
+export function UserProfileInfo({ user }: any) {
+  const [componentState, setComponentState] = useState<ComponentState<NationalityDTO, undefined>>({
+    data: undefined,
+    availableEntities: [],
+    loading: true,
+    error: undefined
+  });
+
+  const getNationalities = async () => {
+    try {
+      const nationalities = await formService.takeNationalities();
+
+      setComponentState({ error: undefined, loading: false, data: undefined, availableEntities: nationalities });
+    } catch (exception) {
+      setComponentState({ ...componentState, loading: false, error: exception });
+    }
+  }
+
+  useEffect(() => { getNationalities() }, []);
+
   return (
     <Box className='container'>
       <Card className='card'>
@@ -24,7 +49,9 @@ export function UserProfileInfo({ user } : any) {
         </Box>
         <CardContent>
           <Typography aria-label="nationality">
-            Nationality: {user.nationality || 'unknown'}
+            Nationality: {
+            componentState.availableEntities
+              .find(natioanlity => natioanlity.id === Number(user.nationality))?.name || 'unknown' }
           </Typography>
           <Typography aria-label="genre">
             Genre: {user.sex || 'unknown'}

@@ -95,8 +95,8 @@ export class BookService {
     if (genre !== undefined && filter !== undefined) {
       likes = await LikeModel.query()
         .where('user_id', id)
-        .withGraphFetched('books')
-        .modifyGraph('books', builder => {
+        .withGraphFetched('book.authorInfo')
+        .modifyGraph('book', builder => {
           builder
             .where({ genre })
             .andWhere('title', 'ILIKE', `%${filter}%`);
@@ -105,16 +105,15 @@ export class BookService {
     else if (filter !== undefined) {
       likes = await LikeModel.query()
         .where('user_id', id)
-        .withGraphFetched('book')
+        .withGraphFetched('book.authorInfo')
         .modifyGraph('book', builder => {
           builder.where('title', 'ILIKE', `%${filter}%`);
         });
     }
     else if (genre !== undefined) {
-      console.log('asd');
       likes = await LikeModel.query()
         .where('user_id', id)
-        .withGraphFetched('book')
+        .withGraphFetched('book.authorInfo')
         .modifyGraph('book', builder => {
           builder.where({ genre });
         });
@@ -124,7 +123,12 @@ export class BookService {
         .where('user_id', id)
         .withGraphFetched('books');
     }
-    return likes.map(like => bookTransformer.transformLikedBooksWithAuthor(like))
+
+    return likes ?  
+      likes
+        .filter(like => like.book)
+        .map(like => bookTransformer.transformLikedBooksWithAuthor(like)) : 
+      [];
   }
 
   fetchByTitle(title: string) {

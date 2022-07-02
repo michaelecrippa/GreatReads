@@ -28,7 +28,7 @@ export class UserModel extends BaseModel implements User {
   name!: string;
   email!: string;
   password!: string;
-  nationality!: string | null;
+  nationality!: number | null;
   sex!: string | null;
   age!: number | null;
   token!: string | null;
